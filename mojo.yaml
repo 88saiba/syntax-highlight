@@ -1,0 +1,50 @@
+filetype: mojo
+
+detect:
+    filename: "\\.(mojo|🔥)$"
+    signature: "fn|struct|let|const|pub|use"
+
+rules:
+    - identifier: "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+    - type: "\\b(bool|int|float|str|char|list|dict|set|tuple|any|void|self)\\b"
+    - type: "\\b(u?int(8|16|32|64)|f(16|32|64)|usize)\\b"
+    - statement: "\\b(if|else|elif|for|while|in|match|case|break|continue|return|yield|pass|raise|import|from|as|assert|with|try|except|finally)\\b"
+    - statement: "\\b(fn|struct|class|pub|impl|const|let|use)\\b"
+    - constant.bool: "\\b(true|false|None)\\b"
+
+    - symbol.operator: "[-+*/%=<>.:;,~&|^!?]|\\b(and|or|not|is|in)\\b"
+    - symbol.brackets: "[(){}]|\\[|\\]"
+
+    - constant.number: "\\b[+-]?(0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+|[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?)\\b"
+    - constant.string:
+        start: "\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\([\"'abfnrtv\\\\]|[0-7]{1,3}|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})"
+
+    - constant.string:
+        start: "'"
+        end: "'"
+        skip: "\\\\."
+        rules:
+            - error: "..+"
+            - constant.specialChar: "\\\\([\"'abfnrtv\\\\]|[0-7]{1,3}|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})"
+
+    - comment:
+        start: "#"
+        end: "$"
+        rules:
+            - todo: "(TODO|FIXME|NOTE):?"
+
+    - docstring:
+        start: "\"\"\""
+        end: "\"\"\""
+        rules:
+            - todo: "(TODO|FIXME|NOTE):?"
+
+    - docstring:
+        start: "'''"
+        end: "'''"
+        rules:
+            - todo: "(TODO|FIXME|NOTE):?"
